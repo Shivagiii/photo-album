@@ -70,7 +70,7 @@ export default function EventPage() {
           <img src={photo.image_url} className="rounded-md " />
         </div>
       ))} */}
-      {/* <ImageGrid
+      <ImageGrid
         items={photoDetails}
         ease="power3.out"
         duration={0.9}
@@ -80,8 +80,8 @@ export default function EventPage() {
         hoverScale={0.95}
         blurToFocus
         colorShiftOnHover={false}
-      /> */}
-        <div style={{ width: "100vw", height: "90vh" }}>
+      />
+        {/* <div style={{ width: "100vw", height: "90vh" }}>
       <DomeGallery
         fit={1}
         minRadius={700}
@@ -93,7 +93,7 @@ export default function EventPage() {
         grayscale={false}
         images={photoDetails}
       />
-      </div>
+      </div> */}
     </div>
   );
 }
