@@ -78,8 +78,8 @@ export default function EventPage() {
         animateFrom="bottom"
         scaleOnHover
         hoverScale={0.95}
-        blurToFocus
-        colorShiftOnHover={false}
+       
+        
       />
         {/* <div style={{ width: "100vw", height: "90vh" }}>
       <DomeGallery
