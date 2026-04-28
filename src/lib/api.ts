@@ -56,3 +56,21 @@ export const fetchEventPhotos = async (eventId: string) => {
       console.log(e);
     }
   };
+
+    export const deletePhoto = async(photoId:string) => {
+    try {
+      const response = await axios.delete(
+        `${API_BASE}/photos/${photoId}`,
+        {
+          params:{
+             "user_id":"scdc"
+          }
+        
+        }
+      );
+      console.log(response);  
+      return response.data
+    }catch(e) {
+      console.log(e);
+    }
+    }
