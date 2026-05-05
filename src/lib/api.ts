@@ -43,11 +43,6 @@ export const fetchEventPhotos = async (eventId: string) => {
       const response = await axios.post(
         `${API_BASE}/photos/uploads`,
         formdata,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        },
       );
       console.log(response);
 
