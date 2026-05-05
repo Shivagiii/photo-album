@@ -1,16 +1,15 @@
 "use client";
 import { PhotoDetails } from "@/app/types";
-import DomeGallery from "@/components/domeGallery/DomeGallery";
 import ImageGrid from "@/components/domeGallery/ImageGrid";
-import { API_BASE, fetchEventPhotos, uploadEventPhotos } from "@/lib/api";
-import axios from "axios";
+import { fetchEventPhotos, uploadEventPhotos } from "@/lib/api";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function EventPage() {
   const { eventId } = useParams<{ eventId: string }>();
   const [photoDetails, setPhotoDetails] = useState<PhotoDetails[] | []>([]);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File[] | []>([]);
+  const [refresh,setRefresh] = useState<boolean>(false)
 
 
   const getEventPhotos = async (eventId: string) => {
@@ -25,26 +24,42 @@ export default function EventPage() {
     if (eventId) {
       getEventPhotos(eventId);
     }
+  
   }, [eventId]);
 
-  const handlePhotoUpload = async(selectedFile:File) => {
-    const formdata = new FormData();
+  
+  useEffect(() => {
+    
+    if(refresh){
+       getEventPhotos(eventId);
+       setRefresh(false)
+    }
+  }, [refresh]);
+
+  const handlePhotoUpload = async(files:File[]) => {
+
+    for (const file of files){
+          const formdata = new FormData();
       formdata.append("event_id", eventId);
       formdata.append("uploaded_by_user_id", "scdc");
       formdata.append("uploaded_by_name", "Shivangi");
-      formdata.append("file", selectedFile);
+      formdata.append("file", file);
 
-      const response =await uploadEventPhotos(formdata);
+      await uploadEventPhotos(formdata);
 
-      if (response?.message == "Uploaded succesfully"){ 
-        setSelectedFile(null);
-      getEventPhotos(eventId);
     }
+
+
+
+     
+        setSelectedFile([]);
+      getEventPhotos(eventId);
+    
 
   }
 
   useEffect( () => {
-    if (selectedFile) {
+    if (selectedFile?.length > 0) {
       handlePhotoUpload(selectedFile)
     }
   }, [selectedFile]);
@@ -56,20 +71,18 @@ export default function EventPage() {
           Upload Photos
           <input
             type="file"
-            accept="image/*"
-            onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+            accept="image/*,video/*"
+            onChange={(e) => {
+              const files= Array.from(e.target.files || [])
+              setSelectedFile(files)
+              e.target.value=""
+            } }
             className="hidden"
+            multiple
           />
         </label>
       </div>
-      {/* {photoDetails.map((photo, index) => (
-        <div
-          key={index}
-          className="w-[200px] h-auto glass p-2  rounded-md overflow-hidden"
-        >
-          <img src={photo.image_url} className="rounded-md " />
-        </div>
-      ))} */}
+
       <ImageGrid
         items={photoDetails}
         ease="power3.out"
@@ -78,6 +91,7 @@ export default function EventPage() {
         animateFrom="bottom"
         scaleOnHover
         hoverScale={0.95}
+        setRefresh={setRefresh}
        
         
       />

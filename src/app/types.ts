@@ -28,5 +28,7 @@ export interface PhotoDetails{
       "filename": string,
       "original_filename": string,
       "uploaded_at": string,
+      "content_type":string,
+      "type":"image" | "video"
     
 }
